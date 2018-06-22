@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jquery Checkout box</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+
+    <div class="checkout-box">
+      <ul>
+        <li><input type="checkbox">&nbsp;&nbsp;Parent
+          <ul>
+            <li>
+              <input type="checkbox">&nbsp;&nbsp;Child 1
+              <ul>
+                <li>
+                  <input type="checkbox">&nbsp;&nbsp;Sub Child 1
+                  <ul>
+                    <li><input type="checkbox">&nbsp;&nbsp;Sub Child 1</li>
+                    <li><input type="checkbox">&nbsp;&nbsp;Sub Child 2</li>
+                    <li><input type="checkbox">&nbsp;&nbsp;Sub Child 3</li>
+                  </ul>
+                </li>
+                <li><input type="checkbox">&nbsp;&nbsp;Sub Child 2</li>
+                <li><input type="checkbox">&nbsp;&nbsp;Sub Child 3</li>
+              </ul>
+            </li>
+            <li><input type="checkbox">&nbsp;&nbsp;Child 2</li>
+            <li><input type="checkbox">&nbsp;&nbsp;Child 3</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+
+          $('input[type="checkbox"]').change(function(e) {
+
+            var checked = $(this).prop("checked"),
+                container = $(this).parent();
+
+            container.find('input[type="checkbox"]').prop({
+              checked: checked
+            });
+
+            checkSiblings(container);
+
+            function checkSiblings(check) {
+
+              var parent = check.parent().parent(),
+                  all = true;
+
+              check.siblings().each(function() {
+                return all = ($(this).children('input[type="checkbox"]').prop("checked") === checked);
+              });
+
+              if (all && checked) {
+                  parent.children('input[type="checkbox"]').prop("checked", checked);
+                  checkSiblings(parent);
+              } else if (all && !checked) {
+                  parent.children('input[type="checkbox"]').prop("checked", checked);
+                  checkSiblings(parent);
+              } else {
+                  check.parents("li").children('input[type="checkbox"]').prop({
+                    checked: true
+                  });
+              }
+
+            }
+          });
+
+    </script>
+  </body>
+</html>
